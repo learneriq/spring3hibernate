@@ -10,23 +10,24 @@ pipeline {
         stage("checkout") {
             steps {
             
-            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/opstree/spring3hibernate.git']]])
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/learneriq/spring3hibernate.git']]])
             }
         }
          stage("Build") {
-             steps {
-             sh "mvn -Dmaven.test.failure.ignore=true clean package"
-             }
+            steps {
+            sh "mvn clean package "
+            }
+                
         }
          stage("findbug") {
              steps {
-         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/opstree/spring3hibernate.git']]])
-        
+                findbugs canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '', unHealthy: ''
+
              }
              }
          stage("checkstyle") {
              steps {
-             checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/opstree/spring3hibernate.git']]])
+                        checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
              }
         }
          stage("pmd") {
